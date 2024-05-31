@@ -4,7 +4,7 @@ from io import BytesIO
 import requests
 from conexao_bd import create_connection, read_lojas
 from excluir_loja import excluir_loja
-from editar_loja import editar_loja
+from editar_loja import EditarLoja
 
 class ListaLojas(tk.Frame):
     def __init__(self, parent, controller):
@@ -49,7 +49,7 @@ class ListaLojas(tk.Frame):
             btn_excluir = tk.Button(frame, text="Excluir", command=lambda id=loja[0], f=frame: self.excluir_loja_wrapper(id, f))
             btn_excluir.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
-            btn_editar = tk.Button(frame, text="Editar", command=lambda info=loja: self.editar_loja_wrapper(info))
+            btn_editar = tk.Button(frame, text="Editar", command=lambda info=loja: self.controller.show_frame('EditarLoja', loja_info=info))
             btn_editar.grid(row=1, column=1, padx=10, pady=5, sticky="e")
 
     def ler_lojas(self):
@@ -68,10 +68,6 @@ class ListaLojas(tk.Frame):
 
     def excluir_loja_wrapper(self, loja_id, frame):
         excluir_loja(loja_id, frame)
-        self.controller.update()
-
-    def editar_loja_wrapper(self, info):
-        editar_loja(info)
         self.controller.update()
 
     def refresh(self):
