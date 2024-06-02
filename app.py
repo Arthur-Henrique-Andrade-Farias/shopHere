@@ -3,6 +3,7 @@ from lista_lojas import ListaLojas
 from criar_loja import CriarLoja
 from editar_loja import EditarLoja
 from login import LoginPage
+from cadastro import CadastroPage
 
 class App(tk.Tk):
     def __init__(self):
@@ -21,6 +22,9 @@ class App(tk.Tk):
 
         self.frames['LoginPage'] = LoginPage(parent=self, controller=self)
         self.frames['LoginPage'].grid(row=0, column=0, sticky="nsew")
+
+        self.frames['CadastroPage'] = CadastroPage(parent=self, controller=self)
+        self.frames['CadastroPage'].grid(row=0, column=0, sticky="nsew")
 
     def show_frame(self, page_name, loja_info=None):
         if page_name not in self.frames and page_name == 'EditarLoja':

@@ -26,9 +26,12 @@ def cadastrar_user(connection, nome, email, senha):
         values = (nome, email, hashed_senha, 0)
         cursor.execute(query, values)
         connection.commit()
-        print("Usuário cadastrado com sucesso")
+        
+        print(f"Cadastroi realizado!")
+
+        return True
     except Error as e:
-        print(f"Erro ao adicionar usuario: {e}")
+        return False
 
 def verificar_login(connection, email, senha):
     try:

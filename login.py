@@ -13,12 +13,17 @@ class LoginPage(tk.Frame):
         self.entry_email= tk.Entry(self)
         self.entry_password = tk.Entry(self, show="*")
         self.button_login = tk.Button(self, text="Login", command=self.login)
+        self.button_signup = tk.Button(self, text="Signup", command=self.go_to_signup)
 
         self.label_email.grid(row=0, column=0, sticky="e")
         self.label_password.grid(row=1, column=0, sticky="e")
         self.entry_email.grid(row=0, column=1)
         self.entry_password.grid(row=1, column=1)
         self.button_login.grid(row=2, column=1)
+        self.button_signup.grid(row=2, column=0, sticky="w")
+
+    def go_to_signup(self):
+        self.controller.show_frame('CadastroPage')
 
     def login(self):
         connection = create_connection()
