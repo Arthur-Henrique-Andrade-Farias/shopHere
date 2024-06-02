@@ -66,4 +66,4 @@ class CriarLoja(tk.Frame):
         messagebox.showinfo("Sucesso", "Loja adicionada com sucesso")
 
     def voltar_para_lista(self):
-        self.controller.show_frame('ListaLojas')
+        self.controller.show_frame('ListaLojasAdm')

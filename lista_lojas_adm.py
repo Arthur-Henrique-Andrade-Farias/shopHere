@@ -6,7 +6,7 @@ from conexao_bd_lojas import create_connection, read_lojas
 from excluir_loja import excluir_loja
 from editar_loja import EditarLoja
 
-class ListaLojas(tk.Frame):
+class ListaLojasAdm(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller

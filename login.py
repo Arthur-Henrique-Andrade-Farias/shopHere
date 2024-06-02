@@ -40,7 +40,7 @@ class LoginPage(tk.Frame):
             self.authenticated = True
             if(user[4] == 1):
                 self.isAdmin = True
-                self.controller.show_frame('ListaLojas')
+                self.controller.show_frame('ListaLojasAdm')
             else:
                 print("mostrar alguma outra tela")
         else: 

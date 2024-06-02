@@ -13,7 +13,7 @@ class EditarLoja(tk.Frame):
         
         tk.Label(self, text="Editar Loja", font=('Helvetica', 18, 'bold')).grid(row=0, column=0, columnspan=2, pady=10)
         
-        tk.Button(self, text="Voltar para Lista", command=lambda: self.controller.show_frame('ListaLojas')).grid(row=1, column=0, columnspan=2, pady=5)
+        tk.Button(self, text="Voltar para Lista", command=lambda: self.controller.show_frame('ListaLojasAdm')).grid(row=1, column=0, columnspan=2, pady=5)
 
         nome_var = tk.StringVar(value=loja_info[1])
         descricao_var = tk.StringVar(value=loja_info[2])
@@ -61,6 +61,6 @@ class EditarLoja(tk.Frame):
             connection.close()
 
             print("Loja atualizada com sucesso")
-            self.controller.show_frame('ListaLojas')
+            self.controller.show_frame('ListaLojasAdm')
 
         tk.Button(self, text="Salvar", command=salvar_edicao).grid(row=9, column=0, columnspan=2, pady=10)
