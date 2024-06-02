@@ -14,6 +14,11 @@ class ListaLojas(tk.Frame):
     def create_widgets(self):
         lojas = self.ler_lojas()
 
+        frame_create = tk.Frame(self)
+        frame_create.pack(anchor=tk.NE, padx=5, pady=5)
+        btn_create = tk.Button(frame_create, text="Logout", command=lambda: self.controller.show_frame('LoginPage'), bg="red", fg="white")
+        btn_create.pack()
+
         max_image_width = 200
         max_image_height = 200
 
@@ -55,5 +60,5 @@ class ListaLojas(tk.Frame):
 
         if width > max_width or height > max_height:
             image.thumbnail((max_width, max_height), Image.LANCZOS)
-            
+
         return image
