@@ -30,7 +30,7 @@ def cadastrar_user(connection, nome, email, senha):
     except Error as e:
         print(f"Erro ao adicionar usuario: {e}")
 
-def obter_usuario_por_email(connection, email, senha):
+def verificar_login(connection, email, senha):
     try:
         cursor = connection.cursor()
         hashed_senha = hashlib.sha256(senha.encode()).hexdigest()

@@ -2,6 +2,7 @@ import tkinter as tk
 from lista_lojas import ListaLojas
 from criar_loja import CriarLoja
 from editar_loja import EditarLoja
+from login import LoginPage
 
 class App(tk.Tk):
     def __init__(self):
@@ -9,7 +10,7 @@ class App(tk.Tk):
         self.title("Gestão de Lojas")
         self.frames = {}
         self.create_frames()
-        self.show_frame('ListaLojas')
+        self.show_frame('LoginPage')
 
     def create_frames(self):
         self.frames['ListaLojas'] = ListaLojas(parent=self, controller=self)
@@ -17,6 +18,9 @@ class App(tk.Tk):
 
         self.frames['CriarLoja'] = CriarLoja(parent=self, controller=self)
         self.frames['CriarLoja'].grid(row=0, column=0, sticky="nsew")
+
+        self.frames['LoginPage'] = LoginPage(parent=self, controller=self)
+        self.frames['LoginPage'].grid(row=0, column=0, sticky="nsew")
 
     def show_frame(self, page_name, loja_info=None):
         if page_name not in self.frames and page_name == 'EditarLoja':
