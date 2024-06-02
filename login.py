@@ -42,7 +42,7 @@ class LoginPage(tk.Frame):
                 self.isAdmin = True
                 self.controller.show_frame('ListaLojasAdm')
             else:
-                print("mostrar alguma outra tela")
+                self.controller.show_frame('ListaLojas')
         else: 
             print("Login falhou. Verifique suas credenciais.")
         
