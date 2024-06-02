@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from io import BytesIO
 import requests
-from conexao_bd import create_connection, read_lojas
+from conexao_bd_lojas import create_connection, read_lojas
 from excluir_loja import excluir_loja
 from editar_loja import EditarLoja
 

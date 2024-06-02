@@ -1,5 +1,5 @@
 import tkinter as tk
-from conexao_bd import create_connection, update_loja
+from conexao_bd_lojas import create_connection, update_loja
 
 class EditarLoja(tk.Frame):
     def __init__(self, parent, controller, loja_info):

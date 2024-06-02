@@ -1,5 +1,5 @@
 import tkinter as tk
-from conexao_bd import create_connection, delete_loja  
+from conexao_bd_lojas import create_connection, delete_loja  
 
 def excluir_loja(loja_id, frame):
     confirmacao = tk.Tk()

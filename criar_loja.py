@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from conexao_bd import create_connection, add_loja
+from conexao_bd_lojas import create_connection, add_loja
 
 class CriarLoja(tk.Frame):
     def __init__(self, parent, controller):
