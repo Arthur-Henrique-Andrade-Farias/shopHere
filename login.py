@@ -38,6 +38,7 @@ class LoginPage(tk.Frame):
 
         if(user):
             self.authenticated = True
+            self.controller.logged_in = True
             if(user[4] == 1):
                 self.isAdmin = True
                 self.controller.show_frame('ListaLojasAdm')

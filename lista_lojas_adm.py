@@ -23,6 +23,8 @@ class ListaLojasAdm(tk.Frame):
         frame_create.pack(anchor=tk.NE, padx=10, pady=10)
         btn_create = tk.Button(frame_create, text="Criar Nova Loja", command=lambda: self.controller.show_frame('CriarLoja'), bg="green", fg="white")
         btn_create.pack()
+        btn_create = tk.Button(frame_create, text="Logout", command=self.logout, bg="red", fg="white")
+        btn_create.pack()
 
         for loja in lojas:
             frame = tk.Frame(self)
@@ -74,3 +76,7 @@ class ListaLojasAdm(tk.Frame):
         for widget in self.winfo_children():
             widget.destroy()
         self.create_widgets()
+
+    def logout(self):
+        self.controller.logged_in = False
+        self.controller.show_frame('LoginPage')

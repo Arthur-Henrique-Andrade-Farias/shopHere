@@ -11,6 +11,7 @@ class App(tk.Tk):
         super().__init__()
         self.title("Gestão de Lojas")
         self.frames = {}
+        self.logged_in = False
         self.create_frames()
         self.show_frame('LoginPage')
 
@@ -31,11 +32,16 @@ class App(tk.Tk):
         self.frames['ListaLojas'].grid(row=0, column=0, sticky="nsew")
 
     def show_frame(self, page_name, loja_info=None):
+        if not self.logged_in:
+            if page_name not in ['LoginPage', 'CadastroPage']:
+                page_name = 'LoginPage'
+
         if page_name not in self.frames and page_name == 'EditarLoja':
             self.frames['EditarLoja'] = EditarLoja(parent=self, controller=self, loja_info=loja_info)
             self.frames['EditarLoja'].grid(row=0, column=0, sticky="nsew")
         elif page_name == 'ListaLojasAdm':
             self.frames['ListaLojasAdm'].refresh()
+
         frame = self.frames[page_name]
         frame.tkraise()
 

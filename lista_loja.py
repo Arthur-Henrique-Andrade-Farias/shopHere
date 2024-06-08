@@ -16,7 +16,7 @@ class ListaLojas(tk.Frame):
 
         frame_create = tk.Frame(self)
         frame_create.pack(anchor=tk.NE, padx=5, pady=5)
-        btn_create = tk.Button(frame_create, text="Logout", command=lambda: self.controller.show_frame('LoginPage'), bg="red", fg="white")
+        btn_create = tk.Button(frame_create, text="Logout", command=self.logout, bg="red", fg="white")
         btn_create.pack()
 
         max_image_width = 200
@@ -62,3 +62,7 @@ class ListaLojas(tk.Frame):
             image.thumbnail((max_width, max_height), Image.LANCZOS)
 
         return image
+    
+    def logout(self):
+        self.controller.logged_in = False
+        self.controller.show_frame('LoginPage')
