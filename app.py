@@ -10,6 +10,8 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Gestão de Lojas")
+        self.geometry("800x600")
+        self.configure(bg="#f0f0f0")
         self.frames = {}
         self.logged_in = False
         self.create_frames()
@@ -17,19 +19,19 @@ class App(tk.Tk):
 
     def create_frames(self):
         self.frames['ListaLojasAdm'] = ListaLojasAdm(parent=self, controller=self)
-        self.frames['ListaLojasAdm'].grid(row=0, column=0, sticky="nsew")
+        self.frames['ListaLojasAdm'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
         self.frames['CriarLoja'] = CriarLoja(parent=self, controller=self)
-        self.frames['CriarLoja'].grid(row=0, column=0, sticky="nsew")
+        self.frames['CriarLoja'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
         self.frames['LoginPage'] = LoginPage(parent=self, controller=self)
-        self.frames['LoginPage'].grid(row=0, column=0, sticky="nsew")
+        self.frames['LoginPage'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
         self.frames['CadastroPage'] = CadastroPage(parent=self, controller=self)
-        self.frames['CadastroPage'].grid(row=0, column=0, sticky="nsew")
+        self.frames['CadastroPage'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
         self.frames['ListaLojas'] = ListaLojas(parent=self, controller=self)
-        self.frames['ListaLojas'].grid(row=0, column=0, sticky="nsew")
+        self.frames['ListaLojas'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
 
     def show_frame(self, page_name, loja_info=None):
         if not self.logged_in:
@@ -38,7 +40,7 @@ class App(tk.Tk):
 
         if page_name not in self.frames and page_name == 'EditarLoja':
             self.frames['EditarLoja'] = EditarLoja(parent=self, controller=self, loja_info=loja_info)
-            self.frames['EditarLoja'].grid(row=0, column=0, sticky="nsew")
+            self.frames['EditarLoja'].grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
         elif page_name == 'ListaLojasAdm':
             self.frames['ListaLojasAdm'].refresh()
 

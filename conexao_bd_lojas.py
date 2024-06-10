@@ -7,7 +7,7 @@ def create_connection():
             host='localhost',
             database='lojas',
             user='root',
-            password='12345'
+            password=''
         )
         if connection.is_connected():
             print("Conexão ao MySQL estabelecida com sucesso")
