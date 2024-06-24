@@ -40,7 +40,7 @@ class LoginPage(tk.Frame):
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
         self.button_login = tk.Button(button_frame, text="Login", command=self.login, font=self.custom_font, bg="#1abc9c", fg="white")
-        self.button_signup = tk.Button(button_frame, text="Signup", command=self.go_to_signup, font=self.custom_font, bg="#3498db", fg="white")
+        self.button_signup = tk.Button(button_frame, text="Registrar", command=self.go_to_signup, font=self.custom_font, bg="#3498db", fg="white")
 
         # Posicionamento dos botões dentro do frame
         self.button_signup.pack(side="left", padx=10)

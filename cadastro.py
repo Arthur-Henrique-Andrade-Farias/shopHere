@@ -30,12 +30,9 @@ class CadastroPage(tk.Frame):
         button_frame = tk.Frame(self, bg="#2c3e50")
         button_frame.grid(row=4, column=0, columnspan=2, pady=10)
 
-        self.button_signup = tk.Button(button_frame, text="Signup", command=self.signup, font=self.custom_font, bg="#1abc9c", fg="white")
-        self.button_login = tk.Button(button_frame, text="Login", command=self.go_to_login, font=self.custom_font, bg="#3498db", fg="white")
-
-        # Posicionamento dos botões dentro do frame
-        self.button_signup.pack(side="left", padx=10)
-        self.button_login.pack(side="right", padx=10)
+        # Centralizar o botão de signup
+        self.button_signup = tk.Button(button_frame, text="Registrar", command=self.signup, font=self.custom_font, bg="#1abc9c", fg="white")
+        self.button_signup.pack(padx=10)
 
         # Centralizar a página de cadastro
         self.grid_columnconfigure(0, weight=1)
@@ -72,9 +69,6 @@ class CadastroPage(tk.Frame):
             entry.insert(0, placeholder)
             if placeholder == "Password":
                 entry.config(show="")
-
-    def go_to_login(self):
-        self.controller.show_frame('LoginPage')
 
     def signup(self):
         connection = create_connection()
