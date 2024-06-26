@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import font as tkfont
 from PIL import Image, ImageTk
 from conexao_bd_users import create_connection, verificar_login
+import os
 
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -20,12 +21,18 @@ class LoginPage(tk.Frame):
         self.label_title.grid(row=0, column=0, columnspan=2, pady=(10, 20))
 
         # Carregar e exibir a imagem da logo
-        logo_path = "images/logo.jpeg"  # Certifique-se de que este caminho está correto
-        logo_image = Image.open(logo_path)
-        logo_image = logo_image.resize((200, 100), Image.Resampling.LANCZOS)  # Redimensionar se necessário
-        self.logo_photo = ImageTk.PhotoImage(logo_image)
-        self.label_logo = tk.Label(self, image=self.logo_photo, bg="#2c3e50")
-        self.label_logo.grid(row=1, column=0, columnspan=2, pady=(0, 20))
+        script_dir = os.path.dirname(__file__)
+        logo_path = os.path.join(script_dir, "images", "logo.jpeg")
+        try:
+            logo_image = Image.open(logo_path)
+            logo_image = logo_image.resize((200, 100), Image.Resampling.LANCZOS)  # Redimensionar se necessário
+            self.logo_photo = ImageTk.PhotoImage(logo_image)
+            self.label_logo = tk.Label(self, image=self.logo_photo, bg="#2c3e50")
+            self.label_logo.grid(row=1, column=0, columnspan=2, pady=(0, 20))
+        except FileNotFoundError:
+            print(f"Erro: arquivo {logo_path} não encontrado.")
+            self.label_logo = tk.Label(self, text="Logo não encontrada", bg="#2c3e50", fg="white")
+            self.label_logo.grid(row=1, column=0, columnspan=2, pady=(0, 20))
 
         # Campos de entrada e placeholders
         self.entry_email = self.create_rounded_entry("Email")
