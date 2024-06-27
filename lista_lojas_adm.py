@@ -1,10 +1,7 @@
 import tkinter as tk
-from tkinter import font as tkfont, messagebox, filedialog, Toplevel, Label, Button, Entry, Text
+from tkinter import font as tkfont, Toplevel, filedialog, messagebox
 from PIL import Image, ImageTk
-from io import BytesIO
-import requests
-from conexao_bd_lojas import create_connection, read_lojas, read_itens, add_item
-from excluir_loja import excluir_loja
+from conexao_bd_lojas import create_connection, read_lojas, read_itens, add_item, delete_loja, read_cidades, add_cidade
 from editar_loja import EditarLoja
 
 class ListaLojasAdm(tk.Frame):
@@ -12,16 +9,26 @@ class ListaLojasAdm(tk.Frame):
         super().__init__(parent)
         self.controller = controller
         self.images = []
+        self.cidades = self.ler_cidades()
+        self.cidade_selecionada = tk.StringVar(value=self.cidades[0][1] if self.cidades else "")
         self.configure(bg="#2c3e50")
         self.custom_font = tkfont.Font(family="Helvetica", size=12, weight="bold")
         self.title_font = tkfont.Font(family="Helvetica", size=18, weight="bold")
         self.create_widgets()
 
     def create_widgets(self):
-        lojas = self.ler_lojas()
-
         frame_top = tk.Frame(self, bg="#2c3e50")
         frame_top.pack(fill=tk.X, padx=10, pady=10)
+
+        # Botão de selecionar cidade
+        self.label_cidade = tk.Label(frame_top, text="Cidade Selecionada:", font=self.custom_font, fg="white", bg="#2c3e50")
+        self.label_cidade.pack(side=tk.LEFT, padx=5)
+        self.option_menu_cidade = tk.OptionMenu(frame_top, self.cidade_selecionada, *[cidade[1] for cidade in self.cidades], command=self.refresh)
+        self.option_menu_cidade.pack(side=tk.LEFT, padx=5)
+
+        # Botão de adicionar cidade
+        self.btn_add_cidade = tk.Button(frame_top, text="Adicionar Cidade", command=self.adicionar_cidade, font=self.custom_font, bg="green", fg="white")
+        self.btn_add_cidade.pack(side=tk.LEFT, padx=5)
 
         frame_create = tk.Frame(frame_top, bg="#2c3e50")
         frame_create.pack(side=tk.LEFT)
@@ -33,7 +40,36 @@ class ListaLojasAdm(tk.Frame):
         btn_logout = tk.Button(frame_logout, text="Logout", command=self.logout, font=self.custom_font, bg="red", fg="white")
         btn_logout.pack(side=tk.RIGHT, padx=5)
 
-        # Canvas com barras de rolagem
+        self.populate_lojas()
+
+    def ler_cidades(self):
+        connection = create_connection()
+        if connection is None:
+            return []
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM cidades")
+        cidades = cursor.fetchall()
+        connection.close()
+        return cidades
+
+    def ler_lojas(self):
+        connection = create_connection()
+        if connection is None:
+            return []
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM lojas WHERE cidade_id = (SELECT id FROM cidades WHERE nome = %s)", (self.cidade_selecionada.get(),))
+        lojas = cursor.fetchall()
+        connection.close()
+        return lojas
+
+    def refresh(self, *args):
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.create_widgets()
+
+    def populate_lojas(self):
+        lojas = self.ler_lojas()
+
         canvas = tk.Canvas(self, bg="#2c3e50")
         canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
@@ -90,28 +126,17 @@ class ListaLojasAdm(tk.Frame):
             btn_add_item = tk.Button(frame, text="Adicionar Item", command=lambda loja_id=loja[0]: self.adicionar_item(loja_id), font=self.custom_font, bg="#2ecc71", fg="white")
             btn_add_item.grid(row=2, column=1, padx=10, pady=5, sticky="e")
 
-    def ler_lojas(self):
+    def excluir_loja_wrapper(self, loja_id, frame):
         connection = create_connection()
-        if connection is None:
-            return []
-        lojas = read_lojas(connection)
+        delete_loja(connection, loja_id)
         connection.close()
-        return lojas
+        frame.destroy()
 
     def resize_image(self, image, max_width, max_height):
         width, height = image.size
         if width > max_width or height > max_height:
             image.thumbnail((max_width, max_height), Image.LANCZOS)
         return image
-
-    def excluir_loja_wrapper(self, loja_id, frame):
-        excluir_loja(loja_id, frame)
-        self.controller.update()
-
-    def refresh(self):
-        for widget in self.winfo_children():
-            widget.destroy()
-        self.create_widgets()
 
     def logout(self):
         self.controller.logged_in = False
@@ -264,3 +289,31 @@ class ListaLojasAdm(tk.Frame):
         x = (screen_width // 2) - (width // 2)
         y = (screen_height // 2) - (height // 2)
         popup.geometry(f"{width}x{height}+{x}+{y}")
+
+    def adicionar_cidade(self):
+        popup = Toplevel(self)
+        popup.title("Adicionar Cidade")
+        popup.configure(bg="#2c3e50")
+
+        label_nome = tk.Label(popup, text="Nome da Cidade:", font=self.custom_font, fg="white", bg="#2c3e50")
+        label_nome.pack(pady=5)
+        entry_nome = tk.Entry(popup, font=self.custom_font)
+        entry_nome.pack(pady=5)
+
+        label_estado = tk.Label(popup, text="Estado:", font=self.custom_font, fg="white", bg="#2c3e50")
+        label_estado.pack(pady=5)
+        entry_estado = tk.Entry(popup, font=self.custom_font)
+        entry_estado.pack(pady=5)
+
+        def submit_cidade():
+            nome = entry_nome.get()
+            estado = entry_estado.get()
+            if nome and estado:
+                connection = create_connection()
+                add_cidade(connection, nome, estado)
+                connection.close()
+                popup.destroy()
+                self.refresh()
+
+        btn_submit = tk.Button(popup, text="Adicionar", command=submit_cidade, font=self.custom_font, bg="green", fg="white")
+        btn_submit.pack(pady=20)

@@ -1,30 +1,63 @@
 import tkinter as tk
-from tkinter import font as tkfont
-from tkinter import Toplevel, Label, Button, Entry
+from tkinter import font as tkfont, Toplevel
 from PIL import Image, ImageTk
-from io import BytesIO
-import requests
-from conexao_bd_lojas import create_connection, read_lojas, read_itens
+from conexao_bd_lojas import create_connection, read_lojas, read_itens, read_cidades
 
 class ListaLojas(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent)
         self.controller = controller
         self.images = []
+        self.cidades = self.ler_cidades()
+        self.cidade_selecionada = tk.StringVar(value=self.cidades[0][1] if self.cidades else "")
         self.configure(bg="#2c3e50")
         self.custom_font = tkfont.Font(family="Helvetica", size=12, weight="bold")
         self.title_font = tkfont.Font(family="Helvetica", size=18, weight="bold")
         self.create_widgets()
 
     def create_widgets(self):
+        frame_top = tk.Frame(self, bg="#2c3e50")
+        frame_top.pack(fill=tk.X, padx=10, pady=10)
+
+        # Botão de selecionar cidade
+        self.label_cidade = tk.Label(frame_top, text="Cidade Selecionada:", font=self.custom_font, fg="white", bg="#2c3e50")
+        self.label_cidade.pack(side=tk.LEFT, padx=5)
+        self.option_menu_cidade = tk.OptionMenu(frame_top, self.cidade_selecionada, *[cidade[1] for cidade in self.cidades], command=self.refresh)
+        self.option_menu_cidade.pack(side=tk.LEFT, padx=5)
+
+        frame_logout = tk.Frame(frame_top, bg="#2c3e50")
+        frame_logout.pack(side=tk.RIGHT)
+        btn_logout = tk.Button(frame_logout, text="Logout", command=self.logout, font=self.custom_font, bg="red", fg="white")
+        btn_logout.pack(side=tk.RIGHT, padx=5)
+
+        self.populate_lojas()
+
+    def ler_cidades(self):
+        connection = create_connection()
+        if connection is None:
+            return []
+        cidades = read_cidades(connection)
+        connection.close()
+        return cidades
+
+    def ler_lojas(self):
+        connection = create_connection()
+        if connection is None:
+            return []
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM lojas WHERE cidade_id = (SELECT id FROM cidades WHERE nome = %s)", (self.cidade_selecionada.get(),))
+        lojas = cursor.fetchall()
+        connection.close()
+        return lojas
+
+    def refresh(self, *args):
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.create_widgets()
+
+    def populate_lojas(self):
         lojas = self.ler_lojas()
 
-        frame_create = tk.Frame(self, bg="#2c3e50")
-        frame_create.pack(anchor=tk.NE, padx=10, pady=10)
-        btn_logout = tk.Button(frame_create, text="Logout", command=self.logout, font=self.custom_font, bg="red", fg="white")
-        btn_logout.pack()
-
-        # Canvas com barras de rolagem
         canvas = tk.Canvas(self, bg="#2c3e50")
         canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
@@ -72,23 +105,10 @@ class ListaLojas(tk.Frame):
             btn_view_items = tk.Button(frame, text="Ver Itens", command=lambda loja_id=loja[0]: self.mostrar_itens(loja_id), font=self.custom_font, bg="#3498db", fg="white")
             btn_view_items.grid(row=1, column=0, padx=10, pady=5, sticky="w")
 
-    def ler_lojas(self):
-        connection = create_connection()
-
-        if connection is None:
-            return []
-        
-        lojas = read_lojas(connection)
-        connection.close()
-
-        return lojas
-
     def resize_image(self, image, max_width, max_height):
         width, height = image.size
-
         if width > max_width or height > max_height:
             image.thumbnail((max_width, max_height), Image.LANCZOS)
-
         return image
     
     def mostrar_itens(self, loja_id):
