@@ -7,7 +7,7 @@ def create_connection():
             host='localhost',
             database='lojas',
             user='root',
-            password='12345'
+            password=''
         )
         if connection.is_connected():
             print("Conexão ao MySQL estabelecida com sucesso")
@@ -16,6 +16,7 @@ def create_connection():
         print(f"Erro ao conectar ao MySQL: {e}")
         return None
 
+# Funções para gerenciar lojas
 def add_loja(connection, nome, descricao, media_preco, url_img, rua, bairro, numero_endereco):
     try:
         cursor = connection.cursor()
@@ -86,4 +87,28 @@ def read_lojas(connection):
         return result
     except Error as e:
         print(f"Erro ao ler lojas: {e}")
+        return None
+
+# Funções para gerenciar itens
+def add_item(connection, nome, descricao, valor, url_img, loja_id):
+    try:
+        cursor = connection.cursor()
+        query = """INSERT INTO itens (nome, descricao, valor, url_img, loja_id) 
+                   VALUES (%s, %s, %s, %s, %s)"""
+        values = (nome, descricao, valor, url_img, loja_id)
+        cursor.execute(query, values)
+        connection.commit()
+        print("Item adicionado com sucesso")
+    except Error as e:
+        print(f"Erro ao adicionar item: {e}")
+
+def read_itens(connection, loja_id):
+    try:
+        cursor = connection.cursor()
+        query = "SELECT * FROM itens WHERE loja_id = %s"
+        cursor.execute(query, (loja_id,))
+        result = cursor.fetchall()
+        return result
+    except Error as e:
+        print(f"Erro ao ler itens: {e}")
         return None
