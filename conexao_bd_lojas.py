@@ -17,12 +17,12 @@ def create_connection():
         return None
 
 # Funções para gerenciar lojas
-def add_loja(connection, nome, descricao, media_preco, url_img, rua, bairro, numero_endereco):
+def add_loja(connection, nome, descricao, media_preco, url_img, rua, bairro, numero_endereco, cidade_id):
     try:
         cursor = connection.cursor()
-        query = """INSERT INTO lojas (nome, descricao, media_preco, url_img, rua, bairro, numero_endereco) 
-                   VALUES (%s, %s, %s, %s, %s, %s, %s)"""
-        values = (nome, descricao, media_preco, url_img, rua, bairro, numero_endereco)
+        query = """INSERT INTO lojas (nome, descricao, media_preco, url_img, rua, bairro, numero_endereco, cidade_id) 
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+        values = (nome, descricao, media_preco, url_img, rua, bairro, numero_endereco, cidade_id)
         cursor.execute(query, values)
         connection.commit()
         print("Loja adicionada com sucesso")
@@ -111,4 +111,25 @@ def read_itens(connection, loja_id):
         return result
     except Error as e:
         print(f"Erro ao ler itens: {e}")
+        return None
+    
+def add_cidade(connection, nome, estado):
+    try:
+        cursor = connection.cursor()
+        query = "INSERT INTO cidades (nome, estado) VALUES (%s, %s)"
+        cursor.execute(query, (nome, estado))
+        connection.commit()
+        print("Cidade adicionada com sucesso")
+    except Error as e:
+        print(f"Erro ao adicionar cidade: {e}")
+
+def read_cidades(connection):
+    try:
+        cursor = connection.cursor()
+        query = "SELECT * FROM cidades"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+    except Error as e:
+        print(f"Erro ao ler cidades: {e}")
         return None

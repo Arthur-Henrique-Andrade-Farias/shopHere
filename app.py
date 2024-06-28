@@ -14,6 +14,7 @@ class App(tk.Tk):
         self.center_window()  # Centralizar a janela
         self.frames = {}
         self.logged_in = False
+        self.logged_in_user = None
         self.create_frames()
         self.show_frame('LoginPage')
 
@@ -47,6 +48,8 @@ class App(tk.Tk):
             self.frames['EditarLoja'].grid(row=0, column=0, sticky="nsew")
         elif page_name == 'ListaLojasAdm':
             self.frames['ListaLojasAdm'].refresh()
+        elif page_name == 'ListaLojas':
+            self.frames['ListaLojas'].refresh()
 
         frame = self.frames[page_name]
         frame.tkraise()
